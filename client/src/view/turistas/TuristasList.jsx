@@ -33,12 +33,12 @@ const TuristasList = ({ turistas, onEdit, onDelete }) => {
                 <td className="py-2 px-4 border-b text-xs">{turista.PAIS}</td>
                 <td className="py-2 px-4 border-b text-xs">
                   {turista.CORREOS.map((correo, index) => (
-                    <div key={index}>{correo}</div>
+                    <div key={index}>{correo.CORREO}</div>
                   ))}
                 </td>
                 <td className="py-2 px-4 border-b text-xs">
                   {turista.TELEFONOS.map((telefono, index) => (
-                    <div key={index}>{telefono}</div>
+                    <div key={index}>{telefono.NUM_TELEFONO}</div>
                   ))}
                 </td>
                 <td className="py-2 px-4 border-b text-xs">
@@ -55,7 +55,7 @@ const TuristasList = ({ turistas, onEdit, onDelete }) => {
                       size="small"
                       variant="contained"
                       color="error"
-                      onClick={() => onDelete(turista.CODIGO_TURISTA)}
+                      onClick={() => onDelete(turista)}
                     >
                       <DeleteIcon fontSize='small'/>
                     </Button>

@@ -21,14 +21,16 @@ async function getTuristaContacts(CODIGO_TURISTA) {
   try {
     connection = await oracledb.getConnection(dbConfig);
     const phoneResult = await connection.execute(
-      `SELECT NUM_TELEFONO FROM AGENCIA_VIAJES.TURISTA_TELEFONO WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
-      [CODIGO_TURISTA]
+      `SELECT ID, NUM_TELEFONO FROM AGENCIA_VIAJES.TURISTA_TELEFONO WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
+      [CODIGO_TURISTA],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
     const emailResult = await connection.execute(
-      `SELECT CORREO FROM AGENCIA_VIAJES.TURISTA_CORREO WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
-      [CODIGO_TURISTA]
+      `SELECT ID, CORREO FROM AGENCIA_VIAJES.TURISTA_CORREO WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
+      [CODIGO_TURISTA],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
-    return { TELEFONOS: phoneResult.rows[0], CORREOS: emailResult.rows[0] };
+    return { TELEFONOS: phoneResult.rows, CORREOS: emailResult.rows };
   } finally {
     if (connection) await connection.close();
   }
@@ -38,11 +40,11 @@ async function addTurista(turista) {
   let connection;
   try {
     connection = await oracledb.getConnection(dbConfig);
+    console.log(turista);
     await connection.execute(
-      `INSERT INTO AGENCIA_VIAJES.TURISTA (CODIGO_TURISTA, SUC_CONTRATADA, NOMBRE1, NOMBRE2, NOMBRE3, APELLIDO1, APELLIDO2, PAIS) 
-      VALUES (:codigo, :sucContratada, :nombre1, :nombre2, :nombre3, :apellido1, :apellido2, :pais)`,
+      `INSERT INTO AGENCIA_VIAJES.TURISTA ( SUC_CONTRATADA, NOMBRE1, NOMBRE2, NOMBRE3, APELLIDO1, APELLIDO2,PAIS) 
+      VALUES ( :sucContratada, :nombre1, :nombre2, :nombre3, :apellido1, :apellido2, :pais)`,
       {
-        codigo: turista.CODIGO_TURISTA,
         sucContratada: turista.SUC_CONTRATADA,
         nombre1: turista.NOMBRE1,
         nombre2: turista.NOMBRE2,
@@ -53,6 +55,8 @@ async function addTurista(turista) {
       },
       { autoCommit: true }
     );
+  } catch (error) {
+    console.log(error);
   } finally {
     if (connection) await connection.close();
   }
@@ -94,28 +98,32 @@ async function updateContacts(CODIGO_TURISTA, contacts) {
   try {
     connection = await oracledb.getConnection(dbConfig);
 
-    await connection.execute('BEGIN');
+    // await connection.execute('BEGIN');
 
     // Proceso para teléfonos
     for (const phone of contacts.TELEFONOS) {
+      console.log(phone);
       if (phone._delete) {
         // Eliminar el teléfono si `_delete` está en true
         await connection.execute(
           `DELETE FROM AGENCIA_VIAJES.TURISTA_TELEFONO 
                      WHERE CODIGO_TURISTA = :CODIGO_TURISTA 
-                     AND TELEFONO = :telefono`,
-          { CODIGO_TURISTA, telefono: phone.value },
-          { autoCommit: false }
+                     AND NUM_TELEFONO = :telefono`,
+          { CODIGO_TURISTA, telefono: phone.NUM_TELEFONO },
+          { autoCommit: true }
         );
       } else {
         // Realizar un upsert para el teléfono
         await connection.execute(
           `MERGE INTO AGENCIA_VIAJES.TURISTA_TELEFONO t
-                     USING (SELECT :CODIGO_TURISTA AS CODIGO_TURISTA, :telefono AS telefono FROM DUAL) s
-                     ON (t.CODIGO_TURISTA = s.CODIGO_TURISTA AND t.TELEFONO = s.telefono)
-                     WHEN NOT MATCHED THEN
-                        INSERT (CODIGO_TURISTA, TELEFONO) VALUES (s.CODIGO_TURISTA, s.telefono)`,
-          { CODIGO_TURISTA, telefono: phone.value },
+           USING (SELECT :CODIGO_TURISTA AS CODIGO_TURISTA, :id AS ID, :telefono AS NUM_TELEFONO  FROM DUAL) s
+           ON (t.ID = s.ID)
+           WHEN MATCHED THEN
+               UPDATE SET t.NUM_TELEFONO = s.NUM_TELEFONO
+           WHEN NOT MATCHED THEN
+               INSERT (CODIGO_TURISTA, NUM_TELEFONO)
+               VALUES (s.CODIGO_TURISTA, s.NUM_TELEFONO)`,
+          { CODIGO_TURISTA, id: phone.ID, telefono: phone.NUM_TELEFONO },
           { autoCommit: false }
         );
       }
@@ -126,28 +134,32 @@ async function updateContacts(CODIGO_TURISTA, contacts) {
       if (email._delete) {
         // Eliminar el correo si `_delete` está en true
         await connection.execute(
-          `DELETE FROM AGENCIA_VIAJES.TURISTA_CORREO 
-                     WHERE CODIGO_TURISTA = :CODIGO_TURISTA 
-                     AND CORREO = :correo`,
-          { CODIGO_TURISTA, correo: email.value },
+          `DELETE FROM AGENCIA_VIAJES.TURISTA_CORREO
+                     WHERE ID = :id`,
+          { id: email.ID },
           { autoCommit: false }
         );
       } else {
         // Realizar un upsert para el correo
         await connection.execute(
-          `MERGE INTO AGENCIA_VIAJES.TURISTA_CORREO c
-                     USING (SELECT :CODIGO_TURISTA AS CODIGO_TURISTA, :correo AS correo FROM DUAL) s
-                     ON (c.CODIGO_TURISTA = s.CODIGO_TURISTA AND c.CORREO = s.correo)
-                     WHEN NOT MATCHED THEN
-                        INSERT (CODIGO_TURISTA, CORREO) VALUES (s.CODIGO_TURISTA, s.correo)`,
-          { CODIGO_TURISTA, correo: email.value },
+          `MERGE INTO AGENCIA_VIAJES.TURISTA_CORREO t
+             USING (SELECT :CODIGO_TURISTA AS CODIGO_TURISTA, :id AS ID, :correo AS CORREO  FROM DUAL) s
+             ON (t.ID = s.ID)
+             WHEN MATCHED THEN
+                 UPDATE SET t.CORREO = s.CORREO
+             WHEN NOT MATCHED THEN
+                 INSERT (CODIGO_TURISTA, CORREO)
+                 VALUES (s.CODIGO_TURISTA, s.CORREO)`,
+          { CODIGO_TURISTA, id: email.ID, correo: email.CORREO },
           { autoCommit: false }
         );
       }
     }
 
+    // await connection.execute('END');
     await connection.commit();
   } catch (error) {
+    console.log(error);
     if (connection) {
       await connection.rollback(); // Revertir cambios en caso de error
     }
@@ -164,7 +176,7 @@ async function deleteTurista(CODIGO_TURISTA) {
   try {
     connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
-      `DELETE FROM TURISTA WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
+      `DELETE FROM AGENCIA_VIAJES.TURISTA WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
       [CODIGO_TURISTA],
       { autoCommit: true }
     );
@@ -178,6 +190,10 @@ async function deleteTurista(CODIGO_TURISTA) {
       [CODIGO_TURISTA],
       { autoCommit: true }
     );
+  } catch (error) {
+    console.log(error);
+
+    throw error;
   } finally {
     if (connection) await connection.close();
   }
@@ -185,19 +201,32 @@ async function deleteTurista(CODIGO_TURISTA) {
 
 async function addTuristaContact(CODIGO_TURISTA, contacts) {
   let connection;
+
+  const sqlPhone = `INSERT INTO AGENCIA_VIAJES.TURISTA_TELEFONO (CODIGO_TURISTA, NUM_TELEFONO) VALUES (:CODIGO_TURISTA, :telefono)`;
+  const sqlEmail = `INSERT INTO AGENCIA_VIAJES.TURISTA_CORREO (CODIGO_TURISTA, CORREO) VALUES (:CODIGO_TURISTA, :correo)`;
+
   try {
     connection = await oracledb.getConnection(dbConfig);
-    const phoneInserts = contacts.TELEFONOS.map((phone) => ({
-      sql: `INSERT INTO AGENCIA_VIAJES.TURISTA_TELEFONO (CODIGO_TURISTA, TELEFONO) VALUES (:CODIGO_TURISTA, :telefono)`,
-      binds: { CODIGO_TURISTA, telefono: phone },
+    const phoneBinds = contacts.TELEFONOS.map((phone) => ({
+      CODIGO_TURISTA,
+      telefono: phone.NUM_TELEFONO,
     }));
-    const emailInserts = contacts.CORREOS.map((email) => ({
-      sql: `INSERT INTO AGENCIA_VIAJES.TURISTA_CORREO (CODIGO_TURISTA, CORREO) VALUES (:CODIGO_TURISTA, :correo)`,
-      binds: { CODIGO_TURISTA, correo: email },
+
+    const emailBinds = contacts.CORREOS.map((email) => ({
+      CODIGO_TURISTA,
+      correo: email.CORREO,
     }));
-    await connection.executeMany(phoneInserts);
-    await connection.executeMany(emailInserts);
-    await connection.commit();
+
+    const options = {
+      autoCommit: true  // Asegura que los cambios se guarden automáticamente
+    };
+
+
+    await connection.executeMany(sqlPhone, phoneBinds, options);
+    // await connection.executeMany(sqlEmail, emailBinds, options);
+    // await connection.commit();
+  } catch (error) {
+    console.log(error);
   } finally {
     if (connection) await connection.close();
   }

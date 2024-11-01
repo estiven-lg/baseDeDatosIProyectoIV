@@ -5,6 +5,7 @@ import MainMenu from './view/MainMenu';
 import Sucursales from './view/sucursales/Sucursales';
 import Navbar from './view/navigator/NavBar';
 import Turistas from './view/turistas/Turistas';
+import Hoteles from './view/hoteles/Hoteles';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -28,6 +29,7 @@ function App() {
           <Route path="/main" element={isAuthenticated ? <MainMenu /> : <Navigate to="/" />} />
           <Route path="/sucursales" element={<Sucursales/>} />
           <Route path="/turistas" element={<Turistas/>} />
+          <Route path="/hoteles" element={<Hoteles/>} />
         </Routes>
       </div>
     </Router>

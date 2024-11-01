@@ -10,13 +10,24 @@ const Navbar = () => {
         </h1>
         <ul className="flex space-x-4">
           <li>
-            <Link to="/" className="hover:text-gray-300">Inicio</Link>
+            <Link to="/" className="hover:text-gray-300">
+              Inicio
+            </Link>
           </li>
           <li>
-            <Link to="/sucursales" className="hover:text-gray-300">Sucursales</Link>
+            <Link to="/sucursales" className="hover:text-gray-300">
+              Sucursales
+            </Link>
           </li>
           <li>
-            <Link to="/turista" className="hover:text-gray-300">Turista</Link>
+            <Link to="/turistas" className="hover:text-gray-300">
+              Turista
+            </Link>
+          </li>
+          <li>
+            <Link to="/hoteles" className="hover:text-gray-300">
+              Hoteles
+            </Link>
           </li>
         </ul>
       </div>

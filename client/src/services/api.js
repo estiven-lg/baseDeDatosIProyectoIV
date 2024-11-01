@@ -62,7 +62,7 @@ export const updateTurista = async (formData) => {
     await axios.put('http://localhost:5000/turistas/' + formData.CODIGO_TURISTA, formData);
     alert(`Turista ${formData.NOMBRE1} actuzalizado`);
   } catch (error) {
-    console.error('Error al agregar a el turista:', error);
+    console.error('Error al actualizar a el turista:', error);
 
     alert('Hubo un problema al actualizar a el turista');
   }
@@ -87,5 +87,49 @@ export const createTurista = async (formData) => {
     console.error('Error al crear a el turista:', error);
 
     alert('Hubo un problema al agregar la turista');
+  }
+};
+// hotels
+
+export const getHoteles = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/hoteles`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener hoteles:', error);
+    throw error;
+  }
+};
+
+export const updateHotel = async (formData) => {
+  try {
+    await axios.put('http://localhost:5000/hoteles/' + formData.CODIGO_HOTEL, formData);
+    alert(`Hotel ${formData.NOMBRE} actuzalizado`);
+  } catch (error) {
+    console.error('Error al actualizar a el hotel:', error);
+
+    alert('Hubo un problema al actualizar a el hotel');
+  }
+};
+
+export const deleteHotel = async (formData) => {
+  try {
+    await axios.delete('http://localhost:5000/hoteles/' + formData.CODIGO_HOTEL);
+    alert(`Hotel  ${formData.NOMBRE} eliminado`);
+  } catch (error) {
+    console.error('Error al eliminar a el hotel:', error);
+
+    alert('Hubo un problema al eliminar el hotel');
+  }
+};
+
+export const createHotel = async (formData) => {
+  try {
+    await axios.post('http://localhost:5000/hoteles/', formData);
+    alert(`Hotel ${formData.NOMBRE} creado`);
+  } catch (error) {
+    console.error('Error al crear a el hotel:', error);
+
+    alert('Hubo un problema al agregar la hotel');
   }
 };

@@ -15,7 +15,7 @@ async function createTurista(req, res) {
   try {
     const turista = req.body;
     await turistaModel.addTurista(turista);
-    await turistaModel.addTuristaContact(turista.codigo, {
+    await turistaModel.addTuristaContact(turista.CODIGO_TURISTA, {
       TELEFONOS: turista.TELEFONOS,
       CORREOS: turista.CORREOS,
     });
@@ -29,7 +29,7 @@ async function updateTurista(req, res) {
   try {
     const turista = req.body;
     await turistaModel.updateTurista(turista);
-    await turistaModel.updateContacts(turista.codigo, {
+    await turistaModel.updateContacts(turista.CODIGO_TURISTA, {
       TELEFONOS: turista.TELEFONOS,
       CORREOS: turista.CORREOS,
     });

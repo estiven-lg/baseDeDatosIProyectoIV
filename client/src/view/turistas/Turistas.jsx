@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { getTuristas, updateTurista } from '../../services/api';
+import {
+  createTurista,
+  deleteHotel,
+  deleteTurista,
+  getTuristas,
+  updateTurista,
+} from '../../services/api';
 import TuristasList from './TuristasList';
 import TuristasForm from './TuristaForm';
 
 const defaulValues = {
   DIRECCION: '',
-  SUCCONTRATADA: '',
+  SUC_CONTRATADA: '',
   NOMBRE1: '',
   NOMBRE2: '',
   NOMBRE3: '',
   APELLIDO1: '',
   APELLIDO2: '',
   PAIS: '',
-  CORREOS: [''],
-  TELEFONOS: [''],
+  CORREOS: [{ CORREO: '' }],
+  TELEFONOS: [{ NUM_PHONE: '' }],
 };
 
 const Turistas = () => {
@@ -36,9 +42,18 @@ const Turistas = () => {
   const onLoadTurista = (sucursalData) => setTurista(sucursalData);
 
   const onSave = async (formData) => {
-    await updateTurista(formData);
+    await createTurista(formData);
+    // if (formData.CODIGO_TURISTA) {
+    // await updateTurista(formData);
+    // } else {
+    // }
 
     setTurista(defaulValues);
+    await fetchTuristas();
+  };
+
+  const onDelete = async (formData) => {
+    await deleteTurista(formData);
     await fetchTuristas();
   };
 
@@ -52,7 +67,7 @@ const Turistas = () => {
   return (
     <div className=" mx-auto mt-8 flex flex-col">
       <div className="w-full">
-        <TuristasList turistas={turistas} onEdit={onLoadTurista} />
+        <TuristasList turistas={turistas} onEdit={onLoadTurista} onDelete={onDelete} />
       </div>
       <div className="w-full">
         <TuristasForm data={turista} onSave={onSave} />

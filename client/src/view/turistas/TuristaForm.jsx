@@ -6,15 +6,15 @@ function TuristaForm({ onSave, data }) {
 
   const [formData, setFormData] = useState({
     DIRECCION: '',
-    SUC_CONTRATADA: '',
+    SUC_CONTRATADA: null,
     NOMBRE1: '',
     NOMBRE2: '',
     NOMBRE3: '',
     APELLIDO1: '',
     APELLIDO2: '',
     PAIS: '',
-    CORREOS: [''],
-    TELEFONOS: [''],
+    CORREOS: [{ CORREO: '' }],
+  TELEFONOS: [{ NUM_PHONE: '' }],
   });
 
   const getSucursalesList = async () => {
@@ -30,27 +30,53 @@ function TuristaForm({ onSave, data }) {
     }));
   };
 
-  const handleArrayChange = (index, type, value) => {
-    const updatedArray = [...formData[type]];
-    updatedArray[index] = value;
+  const handlePhoneChange = (index, value) => {
+    const updatedArray = [...formData['TELEFONOS']];
+    updatedArray[index].NUM_TELEFONO = value;
     setFormData((prev) => ({
       ...prev,
-      [type]: updatedArray,
+      TELEFONOS: updatedArray,
     }));
   };
 
-  const handleAddField = (type) => {
+  const handleAddPhone = () => {
     setFormData((prev) => ({
       ...prev,
-      [type]: [...prev[type], ''],
+      TELEFONOS: [...prev['TELEFONOS'], { NUM_TELEFONO: '' }],
     }));
   };
 
-  const handleRemoveField = (type, index) => {
-    const updatedArray = formData[type].filter((_, i) => i !== index);
+  const handleRemovePhone = (index) => {
+    const updatedArray = [...formData['TELEFONOS']];
+    updatedArray[index]._delete = true;
     setFormData((prev) => ({
       ...prev,
-      [type]: updatedArray,
+      TELEFONOS: updatedArray,
+    }));
+  };
+
+  const handleEmailChange = (index, value) => {
+    const updatedArray = [...formData['CORREOS']];
+    updatedArray[index].CORREO = value;
+    setFormData((prev) => ({
+      ...prev,
+      CORREOS: updatedArray,
+    }));
+  };
+
+  const handleAddEmail = () => {
+    setFormData((prev) => ({
+      ...prev,
+      CORREOS: [...prev['CORREOS'], { CORREO: '' }],
+    }));
+  };
+
+  const handleRemoveEmail = (index) => {
+    const updatedArray = [...formData['CORREOS']];
+    updatedArray[index]._delete = true;
+    setFormData((prev) => ({
+      ...prev,
+      CORREOS: updatedArray,
     }));
   };
 
@@ -186,8 +212,8 @@ function TuristaForm({ onSave, data }) {
               <div key={index} className="flex items-center mb-2">
                 <input
                   type="email"
-                  value={correo}
-                  onChange={(e) => handleArrayChange(index, 'CORREOS', e.target.value)}
+                  value={correo.CORREO}
+                  onChange={(e) => handleEmailChange(index, e.target.value)}
                   className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Correo electrónico"
                   required
@@ -195,7 +221,7 @@ function TuristaForm({ onSave, data }) {
                 {formData.CORREOS.length > 1 && (
                   <button
                     type="button"
-                    onClick={() => handleRemoveField('CORREOS', index)}
+                    onClick={() => handleRemoveEmail(index)}
                     className="ml-2 text-red-500 font-bold"
                   >
                     x
@@ -205,7 +231,7 @@ function TuristaForm({ onSave, data }) {
             ))}
             <button
               type="button"
-              onClick={() => handleAddField('CORREOS')}
+              onClick={() => handleAddEmail()}
               className="text-blue-500 font-medium"
             >
               + Agregar otro correo
@@ -218,8 +244,8 @@ function TuristaForm({ onSave, data }) {
               <div key={index} className="flex items-center mb-2">
                 <input
                   type="text"
-                  value={telefono}
-                  onChange={(e) => handleArrayChange(index, 'TELEFONOS', e.target.value)}
+                  value={telefono.NUM_TELEFONO}
+                  onChange={(e) => handlePhoneChange(index, e.target.value)}
                   className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Número de teléfono"
                   required
@@ -227,7 +253,7 @@ function TuristaForm({ onSave, data }) {
                 {formData.TELEFONOS.length > 1 && (
                   <button
                     type="button"
-                    onClick={() => handleRemoveField('TELEFONOS', index)}
+                    onClick={() => handleRemovePhone(index)}
                     className="ml-2 text-red-500 font-bold"
                   >
                     x
@@ -237,7 +263,7 @@ function TuristaForm({ onSave, data }) {
             ))}
             <button
               type="button"
-              onClick={() => handleAddField('TELEFONOS')}
+              onClick={() => handleAddPhone()}
               className="text-blue-500 font-medium"
             >
               + Agregar otro teléfono
