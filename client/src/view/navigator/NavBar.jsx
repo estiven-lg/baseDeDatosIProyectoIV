@@ -6,14 +6,9 @@ const Navbar = () => {
     <nav className="bg-gray-800 text-white">
       <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold">
-          <Link to="/">Mi Aplicación</Link>
+          <Link to="/">Agencia viajes</Link>
         </h1>
         <ul className="flex space-x-4">
-          <li>
-            <Link to="/" className="hover:text-gray-300">
-              Inicio
-            </Link>
-          </li>
           <li>
             <Link to="/sucursales" className="hover:text-gray-300">
               Sucursales
