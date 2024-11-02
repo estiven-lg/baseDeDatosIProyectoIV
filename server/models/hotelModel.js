@@ -41,7 +41,7 @@ async function createHotel(hotelData) {
   try {
     connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
-      `INSERT INTO AGENCIA_VIAJES.HOTEL (CODIGO_HOTEL, NOMBRE, DIRECCION, CUIDAD, TELEFONO, NUM_PLAZAS_DISP) 
+      `INSERT INTO AGENCIA_VIAJES.HOTEL (CODIGO_HOTEL, NOMBRE, DIRECCION, CIUDAD, TELEFONO, NUM_PLAZAS_DISP) 
        VALUES (:codigoHotel, :nombre, :direccion, :ciudad, :telefono, :numPlazasDisp)`,
       {
         codigoHotel: hotelData.CODIGO_HOTEL,
@@ -70,7 +70,7 @@ async function updateHotel(hotelData) {
       `UPDATE AGENCIA_VIAJES.HOTEL SET 
         NOMBRE = :nombre, 
         DIRECCION = :direccion, 
-        CUIDAD = :ciudad, 
+        CIUDAD = :ciudad, 
         TELEFONO = :telefono, 
         NUM_PLAZAS_DISP = :numPlazasDisp 
        WHERE CODIGO_HOTEL = :codigoHotel`,

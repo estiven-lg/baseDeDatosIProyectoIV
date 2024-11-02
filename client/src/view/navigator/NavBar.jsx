@@ -29,6 +29,11 @@ const Navbar = () => {
               Hoteles
             </Link>
           </li>
+          <li>
+            <Link to="/vuelos" className="hover:text-gray-300">
+              Vuelos
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

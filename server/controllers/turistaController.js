@@ -14,8 +14,8 @@ async function getTurista(req, res) {
 async function createTurista(req, res) {
   try {
     const turista = req.body;
-    await turistaModel.addTurista(turista);
-    await turistaModel.addTuristaContact(turista.CODIGO_TURISTA, {
+    const id = await turistaModel.addTurista(turista);
+    await turistaModel.addTuristaContact(id, {
       TELEFONOS: turista.TELEFONOS,
       CORREOS: turista.CORREOS,
     });
@@ -33,7 +33,7 @@ async function updateTurista(req, res) {
       TELEFONOS: turista.TELEFONOS,
       CORREOS: turista.CORREOS,
     });
-//
+    //
     res.json({ message: 'Turista actualizado exitosamente' });
   } catch (error) {
     res.status(500).json({ error: error.message });

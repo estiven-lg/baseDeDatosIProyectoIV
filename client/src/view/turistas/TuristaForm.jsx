@@ -14,7 +14,7 @@ function TuristaForm({ onSave, data }) {
     APELLIDO2: '',
     PAIS: '',
     CORREOS: [{ CORREO: '' }],
-  TELEFONOS: [{ NUM_PHONE: '' }],
+  TELEFONOS: [{ NUM_TELEFONO: '' }],
   });
 
   const getSucursalesList = async () => {

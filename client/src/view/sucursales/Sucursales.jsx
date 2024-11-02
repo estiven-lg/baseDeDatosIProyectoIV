@@ -10,6 +10,7 @@ const Sucursales = () => {
   const [error, setError] = useState(null);
 
   const fetchSucursales = async () => {
+    
     try {
       const data = await getSucursales();
       setSucursales(data);

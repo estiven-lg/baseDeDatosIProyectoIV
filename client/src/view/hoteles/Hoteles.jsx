@@ -7,7 +7,7 @@ const defaulValues = {
   CODIGO_HOTEL: '',
   NOMBRE: '',
   DIRECCION: '',
-  CUIDAD: '',
+  CIUDAD: '',
   TELEFONO: '',
   NUM_PLAZAS_DISP: 0,
 };
@@ -19,6 +19,7 @@ const Hoteles = () => {
   const [error, setError] = useState(null);
 
   const fetchHoteles = async () => {
+    
     try {
       const data = await getHoteles();
       setHoteles(data);

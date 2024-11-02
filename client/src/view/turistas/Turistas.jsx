@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {
-  createTurista,
-  deleteHotel,
-  deleteTurista,
-  getTuristas,
-  updateTurista,
-} from '../../services/api';
+import { createTurista, deleteTurista, getTuristas, updateTurista } from '../../services/api';
 import TuristasList from './TuristasList';
 import TuristasForm from './TuristaForm';
+import TuristaVuelo from '../turistaVuelo/TuristaVuelo';
+import TuristaHotel from '../turistaHotel/TuristaHotel';
 
 const defaulValues = {
   DIRECCION: '',
@@ -19,7 +15,7 @@ const defaulValues = {
   APELLIDO2: '',
   PAIS: '',
   CORREOS: [{ CORREO: '' }],
-  TELEFONOS: [{ NUM_PHONE: '' }],
+  TELEFONOS: [{ NUM_TELEFONO: '' }],
 };
 
 const Turistas = () => {
@@ -42,11 +38,11 @@ const Turistas = () => {
   const onLoadTurista = (sucursalData) => setTurista(sucursalData);
 
   const onSave = async (formData) => {
-    await createTurista(formData);
-    // if (formData.CODIGO_TURISTA) {
-    // await updateTurista(formData);
-    // } else {
-    // }
+    if (formData.CODIGO_TURISTA) {
+      await updateTurista(formData);
+    } else {
+      await createTurista(formData);
+    }
 
     setTurista(defaulValues);
     await fetchTuristas();
@@ -72,6 +68,16 @@ const Turistas = () => {
       <div className="w-full">
         <TuristasForm data={turista} onSave={onSave} />
       </div>
+      {turista.CODIGO_TURISTA && (
+        <div className="w-full">
+          <TuristaVuelo turista={turista} />
+        </div>
+      )}
+      {turista.CODIGO_TURISTA && (
+        <div className="w-full">
+          <TuristaHotel turista={turista} />
+        </div>
+      )}
     </div>
   );
 };

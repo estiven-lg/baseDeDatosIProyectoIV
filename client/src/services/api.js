@@ -133,3 +133,143 @@ export const createHotel = async (formData) => {
     alert('Hubo un problema al agregar la hotel');
   }
 };
+
+// vuelos
+
+export const getVuelos = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/vuelos`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener vuelos:', error);
+    throw error;
+  }
+};
+
+export const updateVuelo = async (formData) => {
+  try {
+    await axios.put('http://localhost:5000/vuelos/' + formData.NUM_VUELO, formData);
+    alert(`Vuelo de ${formData.ORIGEN} a ${formData.DESTINO} actuzalizado`);
+  } catch (error) {
+    console.error('Error al actualizar a el vuelo:', error);
+
+    alert('Hubo un problema al actualizar a el vuelo');
+  }
+};
+
+export const deleteVuelo = async (formData) => {
+  try {
+    await axios.delete('http://localhost:5000/vuelos/' + formData.NUM_VUELO);
+    alert(`Vuelo  de ${formData.ORIGEN} a ${formData.DESTINO} eliminado`);
+  } catch (error) {
+    console.error('Error al eliminar a el vuelo:', error);
+
+    alert('Hubo un problema al eliminar el vuelo');
+  }
+};
+
+export const createVuelo = async (formData) => {
+  try {
+    await axios.post('http://localhost:5000/vuelos/', formData);
+    alert(`Vuelo de ${formData.ORIGEN} a ${formData.DESTINO} creado`);
+  } catch (error) {
+    console.error('Error al crear a el vuelo:', error);
+
+    alert('Hubo un problema al agregar el vuelo');
+  }
+};
+
+// clases
+
+export const getClases = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/clases`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener clases:', error);
+    throw error;
+  }
+};
+
+// hospedajes
+
+export const getHospedajes = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/hospedajes`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener hospedajes:', error);
+    throw error;
+  }
+};
+
+// turista vuelos
+export const getTuristaVuelos = async (CODIGO_TURISTA) => {
+  try {
+    const response = await axios.get(`${API_URL}/turista-vuelo/${CODIGO_TURISTA}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener clases:', error);
+    throw error;
+  }
+};
+
+export const addTuristaVuelos = async (data) => {
+  try {
+    await axios.post(`${API_URL}/turista-vuelo/`, data);
+
+    alert(`Vuelo agendado`);
+  } catch (error) {
+    console.error('Error al crear a el vuelo:', error);
+
+    console.error('Error al agendar:', error);
+  }
+};
+
+export const deleteTuristaVuelos = async ({TURISTA,VUELO}) => {
+  try {
+    await axios.delete(`${API_URL}/turista-vuelo/${TURISTA}/${VUELO}/`);
+
+    alert(`Vuelo agendado`);
+  } catch (error) {
+    console.error('Error al crear a el vuelo:', error);
+
+    console.error('Error al agendar:', error);
+  }
+};
+
+
+// turista vuelos
+export const getTuristaHotels = async (CODIGO_TURISTA) => {
+  try {
+    const response = await axios.get(`${API_URL}/turista-hotel/${CODIGO_TURISTA}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener clases:', error);
+    throw error;
+  }
+};
+
+export const addTuristaHotels = async (data) => {
+  try {
+    await axios.post(`${API_URL}/turista-hotel/`, data);
+
+    alert(`Hotel agendado`);
+  } catch (error) {
+    console.error('Error al crear a el hotel:', error);
+
+    console.error('Error al agendar:', error);
+  }
+};
+
+export const deleteTuristaHotels = async ({TURISTA,VUELO}) => {
+  try {
+    await axios.delete(`${API_URL}/turista-hotel/${TURISTA}/${VUELO}/`);
+
+    alert(`Vuelo agendado`);
+  } catch (error) {
+    console.error('Error al crear a el hotel:', error);
+
+    console.error('Error al agendar:', error);
+  }
+};

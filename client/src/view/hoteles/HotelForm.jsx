@@ -5,7 +5,7 @@ function HotelForm({ onSave, data }) {
     CODIGO_HOTEL: '',
     NOMBRE: '',
     DIRECCION: '',
-    CUIDAD: '',
+    CIUDAD: '',
     TELEFONO: '',
     NUM_PLAZAS_DISP: 0,
   });
@@ -62,14 +62,14 @@ function HotelForm({ onSave, data }) {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="CUIDAD" className="block text-gray-700 font-medium mb-2">
-            Cuidad
+          <label htmlFor="CIUDAD" className="block text-gray-700 font-medium mb-2">
+            CIUDAD
           </label>
           <input
             type="text"
-            id="CUIDAD"
-            name="CUIDAD"
-            value={formData.CUIDAD}
+            id="CIUDAD"
+            name="CIUDAD"
+            value={formData.CIUDAD}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Teléfono del hotel"
@@ -113,7 +113,7 @@ function HotelForm({ onSave, data }) {
           type="submit"
           className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
         >
-          {formData.CODIGO_TURISTA ? 'Actualizar Turista' : 'Agregar Turista'}
+          {formData.CODIGO_TURISTA ? 'Actualizar Hotel' : 'Agregar Hotel'}
         </button>
       </form>
     </div>

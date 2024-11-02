@@ -6,7 +6,7 @@ async function getTurista(CODIGO_TURISTA) {
   try {
     connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(
-      `SELECT * FROM TURISTA WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
+      `SELECT * FROM TURISTA WHERE CODIGO_TURISTA = :CODIGO_TURISTA SORT BY CODIGO_TURISTA`,
       [CODIGO_TURISTA],
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
@@ -40,10 +40,11 @@ async function addTurista(turista) {
   let connection;
   try {
     connection = await oracledb.getConnection(dbConfig);
-    console.log(turista);
-    await connection.execute(
+
+    const clientResult = await connection.execute(
       `INSERT INTO AGENCIA_VIAJES.TURISTA ( SUC_CONTRATADA, NOMBRE1, NOMBRE2, NOMBRE3, APELLIDO1, APELLIDO2,PAIS) 
-      VALUES ( :sucContratada, :nombre1, :nombre2, :nombre3, :apellido1, :apellido2, :pais)`,
+      VALUES ( :sucContratada, :nombre1, :nombre2, :nombre3, :apellido1, :apellido2, :pais)
+      RETURNING CODIGO_TURISTA INTO :id`,
       {
         sucContratada: turista.SUC_CONTRATADA,
         nombre1: turista.NOMBRE1,
@@ -52,9 +53,14 @@ async function addTurista(turista) {
         apellido1: turista.APELLIDO1,
         apellido2: turista.APELLIDO2,
         pais: turista.PAIS,
+        id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
       },
-      { autoCommit: true }
+      { autoCommit: true, outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
+
+
+
+    return clientResult.outBinds.id[0];
   } catch (error) {
     console.log(error);
   } finally {
@@ -176,17 +182,17 @@ async function deleteTurista(CODIGO_TURISTA) {
   try {
     connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
-      `DELETE FROM AGENCIA_VIAJES.TURISTA WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
-      [CODIGO_TURISTA],
-      { autoCommit: true }
-    );
-    await connection.execute(
       `DELETE FROM AGENCIA_VIAJES.TURISTA_TELEFONO WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
       [CODIGO_TURISTA],
       { autoCommit: true }
     );
     await connection.execute(
       `DELETE FROM AGENCIA_VIAJES.TURISTA_CORREO WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
+      [CODIGO_TURISTA],
+      { autoCommit: true }
+    );
+    await connection.execute(
+      `DELETE FROM AGENCIA_VIAJES.TURISTA WHERE CODIGO_TURISTA = :CODIGO_TURISTA`,
       [CODIGO_TURISTA],
       { autoCommit: true }
     );
@@ -218,13 +224,12 @@ async function addTuristaContact(CODIGO_TURISTA, contacts) {
     }));
 
     const options = {
-      autoCommit: true  // Asegura que los cambios se guarden automáticamente
+      autoCommit: true, // Asegura que los cambios se guarden automáticamente
     };
 
-
     await connection.executeMany(sqlPhone, phoneBinds, options);
-    // await connection.executeMany(sqlEmail, emailBinds, options);
-    // await connection.commit();
+    await connection.executeMany(sqlEmail, emailBinds, options);
+    await connection.commit();
   } catch (error) {
     console.log(error);
   } finally {
@@ -239,7 +244,21 @@ async function getAllTuristas() {
     connection = await oracledb.getConnection(dbConfig);
 
     // Obtener todos los turistas
-    const turistasResult = await connection.execute(`SELECT * FROM  AGENCIA_VIAJES.TURISTA`, [], {
+    const turistasResult = await connection.execute(`
+              SELECT 
+                  t.CODIGO_TURISTA,
+                  t.NOMBRE1,
+                  t.NOMBRE2,
+                  t.NOMBRE3,
+                  t.APELLIDO1,
+                  t.APELLIDO2,
+                  t.PAIS,
+                  s.DIRECCION
+              FROM 
+                  AGENCIA_VIAJES.TURISTA t
+              JOIN 
+                  AGENCIA_VIAJES.SUCURSAL s ON t.SUC_CONTRATADA = s.CODIGO_SUC
+      `, [], {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     });
 

@@ -24,7 +24,7 @@ const TuristasList = ({ turistas, onEdit, onDelete }) => {
             {turistas.map((turista) => (
               <tr key={turista.CODIGO_TURISTA} className="hover:bg-gray-100">
                 <td className="py-2 px-4 border-b text-xs">{turista.CODIGO_TURISTA}</td>
-                <td className="py-2 px-4 border-b text-xs">{turista.SUC_CONTRATADA}</td>
+                <td className="py-2 px-4 border-b text-xs">{turista.DIRECCION}</td>
                 <td className="py-2 px-4 border-b text-xs">
                   {`${turista.NOMBRE1} ${turista.NOMBRE2 || ''} ${turista.NOMBRE3 || ''} ${
                     turista.APELLIDO1

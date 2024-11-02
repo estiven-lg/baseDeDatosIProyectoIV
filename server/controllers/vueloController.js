@@ -11,7 +11,7 @@ async function getAllVuelos(req, res) {
 }
 
 async function getVueloById(req, res) {
-  const numVuelo = req.params.numVuelo;
+  const numVuelo = req.params.id;
   try {
     const vuelo = await vueloModel.getVueloById(numVuelo);
     if (!vuelo) {
@@ -34,7 +34,7 @@ async function createVuelo(req, res) {
 }
 
 async function updateVuelo(req, res) {
-  const numVuelo = req.params.numVuelo;
+  const numVuelo = req.params.id;
   const vuelo = req.body;
   try {
     await vueloModel.updateVuelo(numVuelo, vuelo);
@@ -45,7 +45,7 @@ async function updateVuelo(req, res) {
 }
 
 async function deleteVuelo(req, res) {
-  const numVuelo = req.params.numVuelo;
+  const numVuelo = req.params.id;
   try {
     await vueloModel.deleteVuelo(numVuelo);
     res.json({ message: 'Vuelo deleted successfully' });

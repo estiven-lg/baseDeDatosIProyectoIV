@@ -9,6 +9,10 @@ async function getAllVuelos() {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     });
     return result.rows;
+  } catch (error) {
+    console.log(error);
+
+    throw error;
   } finally {
     if (connection) await connection.close();
   }
@@ -33,11 +37,14 @@ async function createVuelo(vuelo) {
   try {
     connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
-      `INSERT INTO AGENCIA_VIAJES.VUELO (NUM_VUELO, FECHA, ORIGEN, DESTINO, NUM_PLAZA_DISP) 
-      VALUES (:numVuelo, :fecha, :origen, :destino, :numPlazaDisp)`,
-      [vuelo.numVuelo, vuelo.fecha, vuelo.origen, vuelo.destino, vuelo.numPlazaDisp],
+      `INSERT INTO AGENCIA_VIAJES.VUELO ( FECHA, ORIGEN, DESTINO, NUM_PLAZA_DISP) 
+      VALUES ( TO_TIMESTAMP(:fecha,'YYYY-MM-DD"T"HH24:MI:SS.FF3"Z"'), :origen, :destino, :numPlazaDisp)`,
+      [vuelo.FECHA, vuelo.ORIGEN, vuelo.DESTINO, vuelo.NUM_PLAZA_DISP],
       { autoCommit: true }
     );
+  } catch (error) {
+    console.error('Error creating vuelos:', error);
+    throw error;
   } finally {
     if (connection) await connection.close();
   }
@@ -49,11 +56,14 @@ async function updateVuelo(numVuelo, vuelo) {
     connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
       `UPDATE AGENCIA_VIAJES.VUELO 
-      SET FECHA = :fecha, ORIGEN = :origen, DESTINO = :destino, NUM_PLAZA_DISP = :numPlazaDisp 
+      SET FECHA = TO_TIMESTAMP_TZ(:fecha,'YYYY-MM-DD"T"HH24:MI:SS.FF3 TZR'), ORIGEN = :origen, DESTINO = :destino, NUM_PLAZA_DISP = :numPlazaDisp 
       WHERE NUM_VUELO = :numVuelo`,
-      [vuelo.fecha, vuelo.origen, vuelo.destino, vuelo.numPlazaDisp, numVuelo],
+      [vuelo.FECHA, vuelo.ORIGEN, vuelo.DESTINO, vuelo.NUM_PLAZA_DISP, numVuelo],
       { autoCommit: true }
     );
+  } catch (error) {
+    console.error('Error updating vuelos:', error);
+    throw error;
   } finally {
     if (connection) await connection.close();
   }

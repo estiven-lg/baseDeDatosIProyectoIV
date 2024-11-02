@@ -14,6 +14,7 @@ const HotelesList = ({ hoteles, onEdit, onDelete }) => {
               <th className="py-2 px-4 border-b text-left text-gray-600 text-xs">Código Hotel</th>
               <th className="py-2 px-4 border-b text-left text-gray-600 text-xs">Nombre</th>
               <th className="py-2 px-4 border-b text-left text-gray-600 text-xs">Dirección</th>
+              <th className="py-2 px-4 border-b text-left text-gray-600 text-xs">Ciudad</th>
               <th className="py-2 px-4 border-b text-left text-gray-600 text-xs">Teléfono</th>
               <th className="py-2 px-4 border-b text-left text-gray-600 text-xs">Cupos</th>
               <th className="py-2 px-4 border-b text-left text-gray-600" />
@@ -25,6 +26,7 @@ const HotelesList = ({ hoteles, onEdit, onDelete }) => {
                 <td className="py-2 px-4 border-b text-xs">{hotel.CODIGO_HOTEL}</td>
                 <td className="py-2 px-4 border-b text-xs">{hotel.NOMBRE}</td>
                 <td className="py-2 px-4 border-b text-xs">{hotel.DIRECCION}</td>
+                <td className="py-2 px-4 border-b text-xs">{hotel.CIUDAD}</td>
                 <td className="py-2 px-4 border-b text-xs">{hotel.TELEFONO}</td>
                 <td className="py-2 px-4 border-b text-xs">{hotel.NUM_PLAZAS_DISP}</td>
                 <td className="py-2 px-4 border-b text-xs">
