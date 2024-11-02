@@ -69,7 +69,7 @@ En el directorio del servidor (`server/`), crea un archivo `.env` y configura lo
 DB_USER=<tu_usuario>
 DB_PASSWORD=<tu_contraseña>
 DB_CONNECT_STRING=<tu_cadena_de_conexion> # Ejemplo: localhost/XE
-PORT=5000
+PORT=3001
 ``` 
 
 ## Ejecución
@@ -82,7 +82,7 @@ Asegúrate de estar en el directorio `server/` y ejecuta el siguiente comando pa
 
     node index.js
 
-Esto iniciará el servidor en [http://localhost:5000](http://localhost:5000).
+Esto iniciará el servidor en [http://localhost:3001](http://localhost:3001).
 
 ### 2. Ejecución del Frontend
 

@@ -26,20 +26,27 @@ const TuristasList = ({ turistas, onEdit, onDelete }) => {
                 <td className="py-2 px-4 border-b text-xs">{turista.CODIGO_TURISTA}</td>
                 <td className="py-2 px-4 border-b text-xs">{turista.DIRECCION}</td>
                 <td className="py-2 px-4 border-b text-xs">
-                  {`${turista.NOMBRE1} ${turista.NOMBRE2 || ''} ${turista.NOMBRE3 || ''} ${
-                    turista.APELLIDO1
-                  } ${turista.APELLIDO2}`}
+                  {`${turista.NOMBRE1} ${turista.NOMBRE2 || ''} ${turista.NOMBRE3 || ''} ${turista.APELLIDO1
+                    } ${turista.APELLIDO2}`}
                 </td>
                 <td className="py-2 px-4 border-b text-xs">{turista.PAIS}</td>
                 <td className="py-2 px-4 border-b text-xs">
-                  {turista.CORREOS.map((correo, index) => (
-                    <div key={index}>{correo.CORREO}</div>
-                  ))}
+                  {turista.CORREOS.map((correo, index) => {
+                    if (turista._delete) return null;
+
+                    return (
+                      <div key={index}>{correo.CORREO}</div>
+                    )
+                  })}
                 </td>
                 <td className="py-2 px-4 border-b text-xs">
-                  {turista.TELEFONOS.map((telefono, index) => (
-                    <div key={index}>{telefono.NUM_TELEFONO}</div>
-                  ))}
+                  {turista.TELEFONOS.map((telefono, index) => {
+                    if (turista._delete) return null;
+                    return (
+                      <div key={index}>{telefono.NUM_TELEFONO}</div>
+                    )
+                  }
+                  )}
                 </td>
                 <td className="py-2 px-4 border-b text-xs">
                   <div className="flex space-x-2">
@@ -49,7 +56,7 @@ const TuristasList = ({ turistas, onEdit, onDelete }) => {
                       color="info"
                       onClick={() => onEdit(turista)}
                     >
-                      <EditIcon fontSize='small'/>
+                      <EditIcon fontSize='small' />
                     </Button>
                     <Button
                       size="small"
@@ -57,7 +64,7 @@ const TuristasList = ({ turistas, onEdit, onDelete }) => {
                       color="error"
                       onClick={() => onDelete(turista)}
                     >
-                      <DeleteIcon fontSize='small'/>
+                      <DeleteIcon fontSize='small' />
                     </Button>
                   </div>
                 </td>

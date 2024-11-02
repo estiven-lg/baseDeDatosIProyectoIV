@@ -253,7 +253,8 @@ async function getAllTuristas() {
                   t.APELLIDO1,
                   t.APELLIDO2,
                   t.PAIS,
-                  s.DIRECCION
+                  s.DIRECCION,
+                  t.SUC_CONTRATADA
               FROM 
                   AGENCIA_VIAJES.TURISTA t
               JOIN 

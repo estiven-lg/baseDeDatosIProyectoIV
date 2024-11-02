@@ -14,7 +14,7 @@ function TuristaForm({ onSave, data }) {
     APELLIDO2: '',
     PAIS: '',
     CORREOS: [{ CORREO: '' }],
-  TELEFONOS: [{ NUM_TELEFONO: '' }],
+    TELEFONOS: [{ NUM_TELEFONO: '' }],
   });
 
   const getSucursalesList = async () => {
@@ -208,27 +208,30 @@ function TuristaForm({ onSave, data }) {
 
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">Correos</label>
-            {formData.CORREOS.map((correo, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <input
-                  type="email"
-                  value={correo.CORREO}
-                  onChange={(e) => handleEmailChange(index, e.target.value)}
-                  className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Correo electrónico"
-                  required
-                />
-                {formData.CORREOS.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveEmail(index)}
-                    className="ml-2 text-red-500 font-bold"
-                  >
-                    x
-                  </button>
-                )}
-              </div>
-            ))}
+            {formData.CORREOS.map((correo, index) => {
+              if (correo._delete) return null;
+              return (
+                <div key={index} className="flex items-center mb-2">
+                  <input
+                    type="email"
+                    value={correo.CORREO}
+                    onChange={(e) => handleEmailChange(index, e.target.value)}
+                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Correo electrónico"
+                    required
+                  />
+                  {formData.CORREOS.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveEmail(index)}
+                      className="ml-2 text-red-500 font-bold"
+                    >
+                      x
+                    </button>
+                  )}
+                </div>
+              )
+            })}
             <button
               type="button"
               onClick={() => handleAddEmail()}
@@ -240,7 +243,9 @@ function TuristaForm({ onSave, data }) {
 
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">Teléfonos</label>
-            {formData.TELEFONOS.map((telefono, index) => (
+            {formData.TELEFONOS.map((telefono, index) => {
+              if (telefono._delete) return null;
+              return (
               <div key={index} className="flex items-center mb-2">
                 <input
                   type="text"
@@ -260,7 +265,7 @@ function TuristaForm({ onSave, data }) {
                   </button>
                 )}
               </div>
-            ))}
+            )})}
             <button
               type="button"
               onClick={() => handleAddPhone()}

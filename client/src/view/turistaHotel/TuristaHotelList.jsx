@@ -20,7 +20,7 @@ const TuristaHotelList = ({ turistaHotelList, turista, onDelete }) => {
   }
   return (
     <div className="flex-1 px-12">
-      <h1 className="text-3xl font-bold text-center mb-4">Hospedajes de {turista.NOMBRE1}</h1>
+      <h1 className="text-3xl font-bold text-center mb-4">Vuelos de {turista.NOMBRE1}</h1>
       <div className="overflow-hidden shadow rounded-lg border border-gray-200">
         <table className="min-w-full bg-white">
           <thead>
